@@ -30,7 +30,7 @@ jobs:
 
       - name: Push to Docker Hub Container Resgisty
         run: |
-          docker tag ${{ secrets.DOCKER_USERNAME }}/guma-api:0.0.1-SNAPSHOT ${{ secrets.DOCKER_USERNAME }}/guma-api:${{ github.run_id }}
-          docker tag ${{ secrets.DOCKER_USERNAME }}/guma-api:0.0.1-SNAPSHOT ${{ secrets.DOCKER_USERNAME }}/guma-api:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/guma-api:${{ github.run_id }}
-          docker push ${{ secrets.DOCKER_USERNAME }}/guma-api:latest
+          docker tag ${{ secrets.DOCKER_USERNAME }}/gumaapi:0.0.1-SNAPSHOT ${{ secrets.DOCKER_USERNAME }}/gumaapi:${{ github.run_id }}
+          docker tag ${{ secrets.DOCKER_USERNAME }}/gumaapi:0.0.1-SNAPSHOT ${{ secrets.DOCKER_USERNAME }}/gumaapi:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/gumaapi:${{ github.run_id }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/gumaapi:latest
