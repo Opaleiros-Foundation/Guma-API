@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>university.jala</groupId>
-    <artifactId>Guma-api</artifactId>
+    <artifactId>guma-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Guma-api</name>
     <description>Guma-api</description>
