@@ -1,0 +1,36 @@
+name: Build Docker Image
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker hub
+        uses: docker/login-action@v2.2.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          java-package: 'jdk'
+          distribution: 'adopt'
+
+      - name: Build Book service Container Image
+        run: mvn spring-boot:build-image -DskipTests -Dspring.flyway.enabled=false
+
+      - name: Push to Docker Hub Container Resgisty
+        run: |
+          docker tag ${{ secrets.DOCKER_USERNAME }}/Guma-api:0.0.1-SNAPSHOT ${{ secrets.DOCKER_USERNAME }}/Guma-api:${{ github.run_id }}
+          docker tag ${{ secrets.DOCKER_USERNAME }}/Guma-api:0.0.1-SNAPSHOT ${{ secrets.DOCKER_USERNAME }}/Guma-api:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/Guma-api:${{ github.run_id }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/Guma-api:latest
