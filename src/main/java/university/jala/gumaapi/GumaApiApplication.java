@@ -1,13 +1,13 @@
-package university.jala.gumaapi;
+package university.jala.guma-api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GumaApiApplication {
+public class guma-apiApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GumaApiApplication.class, args);
+        SpringApplication.run(guma-apiApplication.class, args);
     }
 
 }
