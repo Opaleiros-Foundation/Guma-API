@@ -1,10 +1,10 @@
-package university.jala.guma-api;
+package university.jala.gumaapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class guma-apiApplicationTests {
+class GumaApiApplicationTests {
 
     @Test
     void contextLoads() {
