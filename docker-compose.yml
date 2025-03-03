@@ -33,6 +33,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      ollama:
+        condition: service_started
 
   client:
     image: matheusvict/gumaclient:latest
@@ -43,9 +45,18 @@ services:
       - "3000:80"
     depends_on:
       - api
-
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    entrypoint: [ "/bin/sh", "-c", "ollama serve & sleep 5 && ollama pull deepseek-r1:1.5b && while true; do echo $$; sleep 1; done" ]
+    volumes:
+      - ollama_volume:/home/ollama_user/.ollama
 
 networks:
   default:
     driver: bridge
     name: guma-network
+
+volumes:
+  ollama_volume:
