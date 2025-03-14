@@ -1,4 +1,4 @@
-package university.jala.gumaapi.dtos;
+package university.jala.gumaapi.dtos.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +12,5 @@ import lombok.Setter;
 public class ChatDTO {
     private String subject;
     private String professor;
-    private String content;
     private String heading;
 }
