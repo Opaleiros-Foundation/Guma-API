@@ -11,7 +11,7 @@ public class ChatDTOResponse {
     private String subject;
     private String professor;
     private String thoughts;
-    private Object content;
+    private String content;
     private String heading;
     private String model;
 }
