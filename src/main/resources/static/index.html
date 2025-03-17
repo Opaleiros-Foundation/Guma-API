@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Respostas do Chat</title>
+    <style>
+        #response-container {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap; /* Mantém a formatação */
+        }
+
+        .response-item {
+            padding: 5px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="input-group">
+    <label for="subject">Subject:</label>
+    <input type="text" id="subject" placeholder="Digite o assunto">
+</div>
+
+<div class="input-group">
+    <label for="professor">Professor:</label>
+    <input type="text" id="professor" placeholder="Nome do professor">
+</div>
+
+<div class="input-group">
+    <label for="heading">Heading:</label>
+    <input type="text" id="heading" placeholder="Título do trabalho">
+</div>
+
+<div class="input-group">
+    <label for="assignmentFile">Arquivo:</label>
+    <input type="file" id="assignmentFile">
+</div>
+
+<button onclick="sendAssignmentStream()">Enviar Trabalho</button>
+
+<div id="response-container">
+    <div id="response-text" class="response-item"></div>
+</div>
+
+<script>
+    async function sendAssignmentStream() {
+        console.log("Iniciando envio...");
+        const decoder = new TextDecoder('utf-8');
+        const formData = new FormData();
+
+        // Captura os valores dos inputs
+        const subject = document.getElementById('subject').value || "Sem assunto";
+        const professor = document.getElementById('professor').value || "Sem professor";
+        const heading = document.getElementById('heading').value || "Sem título";
+
+        // Monta os dados JSON
+        const body = new Blob([JSON.stringify({ subject, professor, heading })], { type: 'application/json' });
+
+        formData.append('body', body);
+
+        // Pega o arquivo do input
+        const fileInput = document.querySelector('input[type="file"]');
+        if (fileInput.files.length > 0) {
+            formData.append('file', fileInput.files[0]);
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/chat', {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'text/event-stream' }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP! status: ${response.status}`);
+            }
+
+            // Seleciona o container onde será exibida a resposta
+            const responseTextElement = document.getElementById('response-text');
+            responseTextElement.textContent = ''; // Limpa antes de começar
+
+            const reader = response.body.getReader();
+            let partialResponse = ""; // Para armazenar mensagens incompletas
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) {
+                    responseTextElement.textContent += '\n\n[Stream finalizado]';
+                    break;
+                }
+
+                // Decodifica os dados recebidos
+                const chunk = decoder.decode(value);
+                partialResponse += chunk; // Acumula partes do JSON
+
+                // Divide as mensagens recebidas (caso tenha mais de uma)
+                const lines = partialResponse.split("\n");
+
+                for (let i = 0; i < lines.length - 1; i++) {
+                    const line = lines[i].trim();
+                    if (line.startsWith("data:")) {
+                        try {
+                            const jsonText = line.replace(/^data:/, '').trim();
+                            const parsedResponse = JSON.parse(jsonText);
+                            responseTextElement.textContent += parsedResponse.content;
+
+                            // Faz scroll para o final
+                            document.getElementById('response-container').scrollTop =
+                                document.getElementById('response-container').scrollHeight;
+                        } catch (error) {
+                            console.error("Erro ao processar JSON:", error);
+                        }
+                    }
+                }
+
+                // Guarda a última linha incompleta para a próxima iteração
+                partialResponse = lines[lines.length - 1];
+            }
+        } catch (error) {
+            document.getElementById('response-text').textContent = `Erro: ${error.message}`;
+        }
+    }
+</script>
+
+</body>
+</html>

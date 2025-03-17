@@ -6,6 +6,7 @@ import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Flux;
 import university.jala.gumaapi.dtos.request.ChatDTO;
 import university.jala.gumaapi.dtos.response.ChatDTOResponse;
 import university.jala.gumaapi.service.ChatReviewService;
@@ -29,11 +30,9 @@ public class ChatReviewServiceImpl implements ChatReviewService {
     }
 
     @Override
-    public ChatDTOResponse verifyAssignment(ChatDTO body, MultipartFile file) {
-
+    public Flux<ChatDTOResponse> verifyAssignment(ChatDTO body, MultipartFile file) {
         String processedFile = this.fileProcessingService.processFile(file);
-
-        String content = this.chatClient.prompt()
+        return this.chatClient.prompt()
                 .system(sp -> sp.params(Map.of(
                         "teacher", body.getProfessor(),
                         "class", body.getSubject(),
@@ -41,19 +40,16 @@ public class ChatReviewServiceImpl implements ChatReviewService {
                 )))
                 .advisors(new SimpleLoggerAdvisor())
                 .user("Responda oque esta faltando no seguinte documento" + processedFile)
-                .call()
-                .content();
-
-        String[] extractedResponse = TextExtractor.extractThinkContent(content);
-        log.info("Extracted Response: {}", extractedResponse);
-        return ChatDTOResponse.builder()
-                .content(extractedResponse[1])
-                .model(ollamaModel)
-                .thoughts(extractedResponse[0])
-                .heading(body.getHeading())
-                .subject(body.getSubject())
-                .professor(body.getProfessor())
-                .build();
+                .stream()
+                .content()
+                .map(data -> ChatDTOResponse.builder()
+                        .content(data)
+                        .model(ollamaModel)
+                        .thoughts(data)
+                        .heading(body.getHeading())
+                        .subject(body.getSubject())
+                        .professor(body.getProfessor())
+                        .build());
     }
 }
 

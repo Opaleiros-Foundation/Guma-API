@@ -10,13 +10,11 @@ public class TextExtractor {
 
         String thinkContent = "";
         if (matcher.find()) {
-            thinkContent = matcher.group(1).trim(); // Captura o conteúdo dentro de <think>
+            thinkContent = matcher.group(1).trim();
         }
 
-        // Criar um novo texto removendo apenas a primeira ocorrência de <think>...</think>
         String remainingContent = matcher.replaceFirst("").trim();
 
-        // Retornar um array com as duas partes
         return new String[]{thinkContent, remainingContent};
     }
 
