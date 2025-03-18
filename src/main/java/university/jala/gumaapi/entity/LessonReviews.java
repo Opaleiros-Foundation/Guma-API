@@ -22,6 +22,9 @@ public class LessonReviews {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String feedback;
 
+    @Column(nullable = false)
+    private String model;
+
     @CreationTimestamp
     private String responseDate;
 }
