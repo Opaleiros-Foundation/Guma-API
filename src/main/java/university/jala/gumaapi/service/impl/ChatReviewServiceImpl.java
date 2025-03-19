@@ -13,7 +13,9 @@ import university.jala.gumaapi.entity.LessonReviews;
 import university.jala.gumaapi.service.ChatReviewService;
 import university.jala.gumaapi.service.FileProcessingService;
 import university.jala.gumaapi.service.LessonReviewsService;
+import university.jala.gumaapi.service.ReviewObserver;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -22,14 +24,17 @@ public class ChatReviewServiceImpl implements ChatReviewService {
     private final ChatClient chatClient;
     private final FileProcessingService fileProcessingService;
     private final LessonReviewsService service;
+    private final List<ReviewObserver> observers;
+
 
     @Value("${spring.ai.ollama.chat.model}")
     private String ollamaModel;
 
-    public ChatReviewServiceImpl(ChatClient chatClient, FileProcessingService fileProcessingService, LessonReviewsServiceImpl service) {
+    public ChatReviewServiceImpl(ChatClient chatClient, FileProcessingService fileProcessingService, LessonReviewsServiceImpl service, List<ReviewObserver> observers) {
         this.chatClient = chatClient;
         this.fileProcessingService = fileProcessingService;
         this.service = service;
+        this.observers = observers;
     }
 
     @Override
@@ -52,12 +57,14 @@ public class ChatReviewServiceImpl implements ChatReviewService {
                 .publishOn(Schedulers.boundedElastic())
                 .doOnComplete(() -> {
                     if (!finalResponseBuilder.isEmpty()) {
-                        service.saveLessonReview(LessonReviews.builder()
+                        LessonReviews review = LessonReviews.builder()
                                 .feedback(finalResponseBuilder.toString())
                                 .subject(body.getSubject())
                                 .professor(body.getProfessor())
-                                        .model(ollamaModel)
-                                .build());
+                                .model(ollamaModel)
+                                .build();
+                        service.saveLessonReview(review);
+                        notifyObservers(review);
                     }
                 })
                 .subscribeOn(Schedulers.parallel());
@@ -75,6 +82,9 @@ public class ChatReviewServiceImpl implements ChatReviewService {
                 .content();
     }
 
+    private void notifyObservers(LessonReviews review) {
+        observers.forEach(observer -> observer.onReviewSaved(review));
+    }
 
 }
 

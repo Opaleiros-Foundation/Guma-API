@@ -13,9 +13,16 @@ spring:
   ai:
     ollama:
       chat:
-        model: deepseek-r1:1.5b
-        options:
-          temperature: 0.1
+        model: deepseek-r1:1.5b #tinyllama
+        #options:
+         # temperature: 0.4
+          #max-tokens: 512
+          #top-k: 20
+          #top-p: 0.7
+          #frequency-penalty: 1.2
+          #presence-penalty: 1.1
+          #stop-sequences: [ "###", "END OF RESPONSE" ]
+          #keep-alive: 10m
 
   h2:
     console:
