@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import university.jala.gumaapi.dtos.request.ChatDTO;
 import university.jala.gumaapi.dtos.response.ChatDTOResponse;
@@ -68,6 +69,11 @@ public class ChatReviewServiceImpl implements ChatReviewService {
                     }
                 })
                 .subscribeOn(Schedulers.parallel());
+    }
+
+    @Override
+    public Mono<LessonReviews> getLessonReviewsById(String lessonId) {
+        return Mono.just(this.service.findByLessonReviewId(lessonId));
     }
 
     private Flux<String> getPrompt(ChatDTO body, String processedFile) {

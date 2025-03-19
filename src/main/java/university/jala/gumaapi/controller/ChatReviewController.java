@@ -3,14 +3,13 @@ package university.jala.gumaapi.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import university.jala.gumaapi.dtos.request.ChatDTO;
 import university.jala.gumaapi.dtos.response.ChatDTOResponse;
+import university.jala.gumaapi.entity.LessonReviews;
 import university.jala.gumaapi.service.ChatReviewService;
 
 @RestController
@@ -24,6 +23,11 @@ public class ChatReviewController {
     public Flux<ChatDTOResponse> verifyAssignment(@RequestPart("body") ChatDTO body, @RequestPart("file") MultipartFile file) {
         log.info("Verifying assignment for {}", body);
         return this.chatReviewService.verifyAssignment(body, file);
+    }
+
+    @GetMapping("/{lessonId}")
+    public Mono<LessonReviews> getLessonReviews(@PathVariable String lessonId) {
+        return this.chatReviewService.getLessonReviewsById(lessonId);
     }
 
 }

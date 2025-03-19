@@ -13,7 +13,7 @@ spring:
   ai:
     ollama:
       chat:
-        model: deepseek-r1:1.5b #tinyllama
+        model:  tinyllama #deepseek-r1:1.5b
         #options:
          # temperature: 0.4
           #max-tokens: 512
