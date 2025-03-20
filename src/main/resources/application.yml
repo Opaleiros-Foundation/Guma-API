@@ -37,3 +37,11 @@ springdoc:
   swagger-ui:
     path: /docs
   show-actuator: true
+
+
+
+canvas:
+  acess_token: ${ACCESS_TOKEN}
+  feign:
+    name: canvas
+    url: https://jalauniversity.instructure.com/api/v1

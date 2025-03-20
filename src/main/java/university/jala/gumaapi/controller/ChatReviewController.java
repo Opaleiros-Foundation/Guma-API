@@ -11,7 +11,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import university.jala.gumaapi.dtos.request.ChatDTO;
 import university.jala.gumaapi.dtos.response.ChatDTOResponse;
+import university.jala.gumaapi.dtos.response.canvas.Assignment;
 import university.jala.gumaapi.entity.LessonReviews;
+import university.jala.gumaapi.service.CanvasService;
 import university.jala.gumaapi.service.ChatReviewService;
 import university.jala.gumaapi.swagger.annotations.NotFoundResponse;
 import university.jala.gumaapi.swagger.annotations.OkResponse;
@@ -21,7 +23,6 @@ import university.jala.gumaapi.swagger.annotations.OkResponse;
 @RequestMapping("/chat")
 @AllArgsConstructor
 @Log4j2
-
 public class ChatReviewController {
     private final ChatReviewService chatReviewService;
 
