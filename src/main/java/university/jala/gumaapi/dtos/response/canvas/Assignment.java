@@ -37,8 +37,8 @@ public class Assignment {
     public boolean onlyVisibleToOverrides;
     @JsonProperty("visible_to_everyone")
     public boolean visibleToEveryone;
-    @JsonProperty("due_at")
-    public boolean locked_for_user;
-    @JsonProperty("due_at")
-    public String submissions_download_url;
+    @JsonProperty("locked_for_user")
+    public boolean lockedForUser;
+    @JsonProperty("submissions_download_url")
+    public String submissionsDownloadUrl;
 }

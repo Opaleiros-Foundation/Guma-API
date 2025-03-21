@@ -33,3 +33,15 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+springdoc:
+  swagger-ui:
+    path: /docs
+  show-actuator: true
+
+
+
+canvas:
+  acess_token: ${ACCESS_TOKEN}
+  feign:
+    name: canvas
+    url: https://jalauniversity.instructure.com/api/v1
