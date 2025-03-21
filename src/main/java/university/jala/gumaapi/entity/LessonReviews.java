@@ -1,10 +1,7 @@
 package university.jala.gumaapi.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
@@ -12,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class LessonReviews {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -23,6 +21,9 @@ public class LessonReviews {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String feedback;
+
+    @Column(nullable = false)
+    private String model;
 
     @CreationTimestamp
     private String responseDate;

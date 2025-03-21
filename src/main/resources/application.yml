@@ -13,7 +13,16 @@ spring:
   ai:
     ollama:
       chat:
-        model: deepseek-r1:1.5b
+        model:  tinyllama #deepseek-r1:1.5b
+        #options:
+         # temperature: 0.4
+          #max-tokens: 512
+          #top-k: 20
+          #top-p: 0.7
+          #frequency-penalty: 1.2
+          #presence-penalty: 1.1
+          #stop-sequences: [ "###", "END OF RESPONSE" ]
+          #keep-alive: 10m
 
   h2:
     console:
@@ -24,3 +33,15 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+springdoc:
+  swagger-ui:
+    path: /docs
+  show-actuator: true
+
+
+
+canvas:
+  acess_token: ${ACCESS_TOKEN}
+  feign:
+    name: canvas
+    url: https://jalauniversity.instructure.com/api/v1

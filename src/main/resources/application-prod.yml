@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: Guma-api
+  datasource:
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: update
+  ai:
+    ollama:
+      chat:
+        model:  ${OLLAMA_MODEL}
+          #options:
+          # temperature: 0.4
+          #max-tokens: 512
+          #top-k: 20
+          #top-p: 0.7
+          #frequency-penalty: 1.2
+          #presence-penalty: 1.1
+          #stop-sequences: [ "###", "END OF RESPONSE" ]
+        #keep-alive: 10m
+      base-url: ${OLLAMA_BASE_URL}
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+springdoc:
+  swagger-ui:
+    path: /docs
+  show-actuator: true
+
+
+
+canvas:
+  acess_token: ${ACCESS_TOKEN}
+  feign:
+    name: canvas
+    url: https://jalauniversity.instructure.com/api/v1

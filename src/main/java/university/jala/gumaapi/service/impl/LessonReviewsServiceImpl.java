@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import university.jala.gumaapi.entity.LessonReviews;
+import university.jala.gumaapi.handler.exceptions.LessonNotFoundException;
 import university.jala.gumaapi.repository.LessonReviewsRepository;
 import university.jala.gumaapi.service.LessonReviewsService;
 
@@ -15,7 +16,7 @@ public class LessonReviewsServiceImpl implements LessonReviewsService {
 
     @Override
     public LessonReviews findByLessonReviewId(String lessonId) {
-        return service.findById(lessonId).orElseThrow(() -> new RuntimeException("Lesson review not found"));
+        return service.findById(lessonId).orElseThrow(() -> new LessonNotFoundException("Lesson review not found with uuid: " + lessonId));
     }
 
     @Transactional
