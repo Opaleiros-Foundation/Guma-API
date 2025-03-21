@@ -2,18 +2,17 @@ spring:
   application:
     name: Guma-api
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
-    driverClassName: org.h2.Driver
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
   jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+    properties:
+      hibernate:
+        ddl-auto: update
   ai:
     ollama:
       chat:
-        model:  tinyllama #deepseek-r1:1.5b
+        model:  ${OLLAMA_MODEL}
           #options:
           # temperature: 0.4
           #max-tokens: 512
@@ -23,11 +22,7 @@ spring:
           #presence-penalty: 1.1
           #stop-sequences: [ "###", "END OF RESPONSE" ]
         #keep-alive: 10m
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+      base-url: ${OLLAMA_BASE_URL}
 
   servlet:
     multipart:

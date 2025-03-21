@@ -28,6 +28,8 @@ services:
       - PGDATABASE=guma
       - PGUSER=postgres
       - PGPASSWORD=123
+      - OLLAMA_BASE_URL=ollama
+      - OLLAMA_MODEL=tinyllama
     ports:
       - "8080:8080"
     depends_on:
@@ -47,6 +49,7 @@ services:
       - api
   ollama:
     image: ollama/ollama
+    hostname: ollama
     ports:
       - "11434:11434"
     entrypoint: [ "/bin/sh", "-c", "ollama serve & sleep 5 && ollama pull deepseek-r1:1.5b && while true; do echo $$; sleep 1; done" ]
