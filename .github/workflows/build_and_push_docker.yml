@@ -25,11 +25,12 @@ jobs:
           java-package: 'jdk'
           distribution: 'adopt'
 
-      - name: Build Book service Container Image
-        run: mvn spring-boot:build-image -DskipTests -Dspring.flyway.enabled=false
+      - name: Build guma api
+        run:  mvn clean package -DskipTests
 
       - name: Push to Docker Hub Container Resgisty
         run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/gumaapi:0.0.1-SNAPSHOT .
           docker tag ${{ secrets.DOCKER_USERNAME }}/gumaapi:0.0.1-SNAPSHOT ${{ secrets.DOCKER_USERNAME }}/gumaapi:${{ github.run_id }}
           docker tag ${{ secrets.DOCKER_USERNAME }}/gumaapi:0.0.1-SNAPSHOT ${{ secrets.DOCKER_USERNAME }}/gumaapi:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/gumaapi:${{ github.run_id }}
