@@ -8,7 +8,7 @@ services:
       - POSTGRES_PASSWORD=123
       - POSTGRES_DB=guma
     ports:
-      - "5431:5432"
+      - "5431:5431"
     healthcheck:
       test: [ "CMD-SHELL", "psql -h localhost -U postgres -d guma -c 'SELECT 1;'" ]
       interval: 5s
@@ -17,6 +17,8 @@ services:
       start_period: 10s
     volumes:
       - ./.docker/db/data:/var/lib/postgresql/:delegated
+    networks:
+      - mynetwork
 
   api:
     image: matheusvict/gumaapi:latest
@@ -24,7 +26,7 @@ services:
     environment:
       - SPRING.PROFILES.ACTIVE=prod
       - PGHOST=db
-      - PGPORT=5432
+      - PGPORT=5431
       - PGDATABASE=guma
       - PGUSER=postgres
       - PGPASSWORD=123
@@ -37,6 +39,8 @@ services:
         condition: service_healthy
       ollama:
         condition: service_started
+    networks:
+      - mynetwork
 
   client:
     image: matheusvict/gumaclient:latest
@@ -47,19 +51,22 @@ services:
       - "3000:80"
     depends_on:
       - api
+    networks:
+      - mynetwork
   ollama:
     image: ollama/ollama
     hostname: ollama
     ports:
       - "11434:11434"
-    entrypoint: [ "/bin/sh", "-c", "ollama serve & sleep 5 && ollama pull deepseek-r1:1.5b && while true; do echo $$; sleep 1; done" ]
+    entrypoint: [ "/bin/sh", "-c", "ollama serve & sleep 5 && ollama pull tinyllama && while true; do echo $$; sleep 1; done" ]
     volumes:
       - ollama_volume:/home/ollama_user/.ollama
+    networks:
+      - mynetwork
 
 networks:
-  default:
+  mynetwork:
     driver: bridge
-    name: guma-network
 
 volumes:
   ollama_volume:
