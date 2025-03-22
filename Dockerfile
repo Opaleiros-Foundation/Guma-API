@@ -7,9 +7,13 @@ COPY src ./src
 
 RUN mvn clean package -DskipTests
 
+# Usa uma imagem Debian Slim (mínima)
 FROM openjdk:17-jdk-slim
 
 WORKDIR /app
+
+# ✅ Adiciona curl e remove cache para manter a imagem leve
+RUN apt update && apt install -y curl && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/target/*.jar app.jar
 
