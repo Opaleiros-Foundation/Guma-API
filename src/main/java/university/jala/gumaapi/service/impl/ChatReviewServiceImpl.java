@@ -10,11 +10,9 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import university.jala.gumaapi.dtos.request.ChatDTO;
 import university.jala.gumaapi.dtos.response.ChatDTOResponse;
+import university.jala.gumaapi.dtos.response.canvas.Assignment;
 import university.jala.gumaapi.entity.LessonReviews;
-import university.jala.gumaapi.service.ChatReviewService;
-import university.jala.gumaapi.service.FileProcessingService;
-import university.jala.gumaapi.service.LessonReviewsService;
-import university.jala.gumaapi.service.ReviewObserver;
+import university.jala.gumaapi.service.*;
 
 import java.util.List;
 import java.util.Map;
@@ -26,23 +24,28 @@ public class ChatReviewServiceImpl implements ChatReviewService {
     private final FileProcessingService fileProcessingService;
     private final LessonReviewsService service;
     private final List<ReviewObserver> observers;
+    private final CanvasService canvasService;
 
 
     @Value("${spring.ai.ollama.chat.model}")
     private String ollamaModel;
 
-    public ChatReviewServiceImpl(ChatClient chatClient, FileProcessingService fileProcessingService, LessonReviewsServiceImpl service, List<ReviewObserver> observers) {
+    public ChatReviewServiceImpl(ChatClient chatClient, FileProcessingService fileProcessingService, LessonReviewsServiceImpl service, List<ReviewObserver> observers, CanvasService canvasService) {
         this.chatClient = chatClient;
         this.fileProcessingService = fileProcessingService;
         this.service = service;
         this.observers = observers;
+        this.canvasService = canvasService;
     }
 
     @Override
-    public Flux<ChatDTOResponse> verifyAssignment(ChatDTO body, MultipartFile file) {
+    public Flux<ChatDTOResponse> verifyAssignment(ChatDTO body, MultipartFile file, int courseId, int assignmentId, String token) {
         String processedFile = this.fileProcessingService.processFile(file);
 
         StringBuilder finalResponseBuilder = new StringBuilder();
+
+        Assignment assignmentFound = this.canvasService.getAssignmentById(courseId, assignmentId, token);
+        body.setHeading(assignmentFound.getRubric());
 
         return this.getPrompt(body, processedFile)
                 .map(data -> {
@@ -50,7 +53,6 @@ public class ChatReviewServiceImpl implements ChatReviewService {
                     return ChatDTOResponse.builder()
                             .content(data)
                             .model(ollamaModel)
-                            .heading(body.getHeading())
                             .subject(body.getSubject())
                             .professor(body.getProfessor())
                             .build();

@@ -11,9 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import university.jala.gumaapi.dtos.request.ChatDTO;
 import university.jala.gumaapi.dtos.response.ChatDTOResponse;
-import university.jala.gumaapi.dtos.response.canvas.Assignment;
 import university.jala.gumaapi.entity.LessonReviews;
-import university.jala.gumaapi.service.CanvasService;
 import university.jala.gumaapi.service.ChatReviewService;
 import university.jala.gumaapi.swagger.annotations.NotFoundResponse;
 import university.jala.gumaapi.swagger.annotations.OkResponse;
@@ -29,9 +27,15 @@ public class ChatReviewController {
     @Operation(summary = "Verify Assignment", description = "Generate a prompt to verify your submission")
     @OkResponse
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ChatDTOResponse> verifyAssignment(@RequestPart("body") ChatDTO body, @RequestPart("file") MultipartFile file) {
+    public Flux<ChatDTOResponse> verifyAssignment(
+            @RequestPart("body") ChatDTO body,
+            @RequestPart("file") MultipartFile file,
+            @RequestParam int courseId,
+            @RequestParam int assignmentId,
+            @RequestHeader("access_token") String token
+    ) {
         log.info("Verifying assignment for {}", body);
-        return this.chatReviewService.verifyAssignment(body, file);
+        return this.chatReviewService.verifyAssignment(body, file, courseId, assignmentId, token);
     }
 
     @Operation(summary = "Get Assignment", description = "Get assignment answer by uuid")

@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import university.jala.gumaapi.dtos.response.canvas.Rubric;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,5 +19,5 @@ public class ChatDTO {
     @Schema(description = "The professor responsible for the subject", example = "John")
     private String professor;
     @Schema(description = "The heading of the assignment", example = "Do A great database")
-    private String heading;
+    private List<Rubric> heading;
 }

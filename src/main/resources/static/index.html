@@ -71,7 +71,7 @@
         const heading = document.getElementById('heading').value || "Sem título";
 
         // Monta os dados JSON
-        const body = new Blob([JSON.stringify({ subject, professor, heading })], { type: 'application/json' });
+        const body = new Blob([JSON.stringify({ subject, professor })], { type: 'application/json' });
 
         formData.append('body', body);
 
@@ -82,10 +82,10 @@
         }
 
         try {
-            const response = await fetch('http://localhost:8080/chat', {
+            const response = await fetch('http://localhost:8080/chat?courseId=772&assignmentId=49326', {
                 method: 'POST',
                 body: formData,
-                headers: { 'Accept': 'text/event-stream' }
+                headers: { 'Accept': 'text/event-stream', 'access_token': '22651~UecHyaE8xYNDuAyr4tk2fKcETRY98rQ2knctrfWWMHyJ2F9Mw3x7KPFHMJmJa2AW' }
             });
 
             if (!response.ok) {
