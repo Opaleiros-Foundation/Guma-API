@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   db:
     image: postgres
@@ -30,7 +29,9 @@ services:
       - PGDATABASE=guma
       - PGUSER=postgres
       - PGPASSWORD=123
-      - OLLAMA_BASE_URL="http://ollama:11434"
+      - SPRING.AI.OLLAMA.USERNAME=api
+      - SPRING.AI.OLLAMA.PASSWORD=api
+      - OLLAMA_BASE_URL=http://ollama:11434
       - OLLAMA_MODEL=tinyllama
     ports:
       - "8080:8080"
@@ -41,6 +42,12 @@ services:
         condition: service_started
     networks:
       - mynetwork
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --fail http://localhost:8080/actuator/health || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
 
   client:
     image: matheusvict/gumaclient:latest
@@ -66,7 +73,10 @@ services:
     restart: always
     environment:
       - OLLAMA_KEEP_ALIVE=24h
-      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_USERNAME=api
+      - OLLAMA_PASSWORD=api
+    entrypoint: [ "/bin/sh", "-c", "ollama serve & sleep 5 && ollama pull tinyllama && while true; do echo $$; sleep 1; done" ]
     networks:
       - mynetwork
 
