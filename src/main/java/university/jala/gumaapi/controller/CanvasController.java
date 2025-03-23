@@ -1,5 +1,6 @@
 package university.jala.gumaapi.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 public class CanvasController {
     private final CanvasService canvasService;
 
+    @Operation(summary = "Get all courses enrolled", description = "get all courses which student is enrolled")
     @GetMapping("/courses")
     @OkResponse
     public ResponseEntity<List<Course>> getAllCoursesEnrolled(@RequestHeader(value = "access_token") String token) {
@@ -25,6 +27,7 @@ public class CanvasController {
         return ResponseEntity.ok(allCourse);
     }
 
+    @Operation(summary = "Get all Assignment by course", description = "Get all assignments available in the course")
     @GetMapping("/assignments/{courseId}")
     @OkResponse
     public ResponseEntity<List<Assignment>> getAssignmentById(@PathVariable int courseId, @RequestHeader(value = "access_token") String token) {
@@ -32,6 +35,7 @@ public class CanvasController {
         return ResponseEntity.ok(AllAssignmentsFromCourse);
     }
 
+    @Operation(summary = "Get the assignment by id", description = "get assignment by id")
     @GetMapping("/assignments/{courseId}/{assignmentId}")
     @OkResponse
     public ResponseEntity<Assignment> getAssignmentById(@PathVariable int courseId, @PathVariable int assignmentId, @RequestHeader(value = "access_token") String token) {
