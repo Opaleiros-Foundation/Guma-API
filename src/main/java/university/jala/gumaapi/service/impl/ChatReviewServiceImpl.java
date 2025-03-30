@@ -46,6 +46,7 @@ public class ChatReviewServiceImpl implements ChatReviewService {
 
         Assignment assignmentFound = this.canvasService.getAssignmentById(courseId, assignmentId, token);
         body.setHeading(assignmentFound.getRubric());
+        log.info("Rubric {} of assignment {}", body.getHeading(), assignmentId);
 
         return this.getPrompt(body, processedFile)
                 .map(data -> {

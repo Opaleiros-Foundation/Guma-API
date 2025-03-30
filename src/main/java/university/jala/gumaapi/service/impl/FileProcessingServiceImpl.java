@@ -11,7 +11,6 @@ import university.jala.gumaapi.service.FileProcessingService;
 @Log4j2
 public class FileProcessingServiceImpl implements FileProcessingService {
 
-    //Logger logger = LoggerFactory.getLogger(FileProcessingService.class);
     public String processFile(MultipartFile file) {
         String text;
 
@@ -21,7 +20,7 @@ public class FileProcessingServiceImpl implements FileProcessingService {
         } catch (final Exception ex) {
             text = "Error parsing PDF";
         }
-        log.info(text);
+        log.debug(text);
 
         return text;
     }
