@@ -30,7 +30,13 @@ public class ChatReviewServiceImpl implements ChatReviewService {
     @Value("${spring.ai.ollama.chat.model}")
     private String ollamaModel;
 
-    public ChatReviewServiceImpl(ChatClient chatClient, FileProcessingService fileProcessingService, LessonReviewsServiceImpl service, List<ReviewObserver> observers, CanvasService canvasService) {
+    public ChatReviewServiceImpl(
+            ChatClient chatClient,
+            FileProcessingService fileProcessingService,
+            LessonReviewsServiceImpl service,
+            List<ReviewObserver> observers,
+            CanvasService canvasService
+    ) {
         this.chatClient = chatClient;
         this.fileProcessingService = fileProcessingService;
         this.service = service;
@@ -39,7 +45,13 @@ public class ChatReviewServiceImpl implements ChatReviewService {
     }
 
     @Override
-    public Flux<ChatDTOResponse> verifyAssignment(ChatDTO body, MultipartFile file, int courseId, int assignmentId, String token) {
+    public Flux<ChatDTOResponse> verifyAssignment(
+            ChatDTO body,
+            MultipartFile file,
+            int courseId,
+            int assignmentId,
+            String token
+    ) {
         String processedFile = this.fileProcessingService.processFile(file);
 
         StringBuilder finalResponseBuilder = new StringBuilder();
