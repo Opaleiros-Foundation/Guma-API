@@ -26,16 +26,15 @@ public class ChatReviewController {
 
     @Operation(summary = "Verify Assignment", description = "Generate a prompt to verify your submission")
     @OkResponse
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ChatDTOResponse> verifyAssignment(
-            @RequestPart("body") ChatDTO body,
-            @RequestPart("file") MultipartFile file,
+            @RequestBody ChatDTO body,
             @RequestParam int courseId,
             @RequestParam int assignmentId,
             @RequestHeader("access_token") String token
     ) {
-        log.info("Verifying assignment for {}", body);
-        return this.chatReviewService.verifyAssignment(body, file, courseId, assignmentId, token);
+        log.info("[CHATREVIEW CONTROLLER] (POST /chat?courseId={}&assignmentId={}) - Verifying assignment for {}", courseId, assignmentId, body);
+        return this.chatReviewService.verifyAssignment(body, courseId, assignmentId, token);
     }
 
     @Operation(summary = "Get Assignment", description = "Get assignment answer by uuid")

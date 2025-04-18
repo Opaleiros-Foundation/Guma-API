@@ -47,20 +47,18 @@ public class ChatReviewServiceImpl implements ChatReviewService {
     @Override
     public Flux<ChatDTOResponse> verifyAssignment(
             ChatDTO body,
-            MultipartFile file,
             int courseId,
             int assignmentId,
             String token
     ) {
-        String processedFile = this.fileProcessingService.processFile(file);
 
         StringBuilder finalResponseBuilder = new StringBuilder();
 
         Assignment assignmentFound = this.canvasService.getAssignmentById(courseId, assignmentId, token);
         body.setHeading(assignmentFound.getRubric());
-        log.info("Rubric {} of assignment {}", body.getHeading(), assignmentId);
+        log.info("[CHATREVIEW-SERVICE] Rubric {} of assignment {}", body.getHeading(), assignmentId);
 
-        return this.getPrompt(body, processedFile)
+        return this.getPrompt(body)
                 .map(data -> {
                     finalResponseBuilder.append(data);
                     return ChatDTOResponse.builder()
@@ -91,14 +89,15 @@ public class ChatReviewServiceImpl implements ChatReviewService {
         return Mono.just(this.service.findByLessonReviewId(lessonId));
     }
 
-    private Flux<String> getPrompt(ChatDTO body, String processedFile) {
+    private Flux<String> getPrompt(ChatDTO body) {
+        log.info("Generating prompt to {}", body.getSubject());
         return this.chatClient.prompt()
                 .system(sp -> sp.params(Map.of(
                         "teacher", body.getProfessor(),
                         "class", body.getSubject(),
                         "heading", body.getHeading()
                 )))
-                .user("Responda o que está faltando no seguinte documento: " + processedFile)
+                .user("Responda o que está faltando no seguinte documento: " + body.getContent())
                 .stream()
                 .content();
     }

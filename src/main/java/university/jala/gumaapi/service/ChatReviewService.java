@@ -8,7 +8,7 @@ import university.jala.gumaapi.dtos.response.ChatDTOResponse;
 import university.jala.gumaapi.entity.LessonReviews;
 
 public interface ChatReviewService {
-    Flux<ChatDTOResponse> verifyAssignment(ChatDTO body, MultipartFile file, int courseId, int assignmentId, String token);
+    Flux<ChatDTOResponse> verifyAssignment(ChatDTO body, int courseId, int assignmentId, String token);
     Mono<LessonReviews> getLessonReviewsById(String lessonId);
 
 }
