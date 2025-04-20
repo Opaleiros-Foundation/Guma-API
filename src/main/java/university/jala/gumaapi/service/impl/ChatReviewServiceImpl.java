@@ -10,11 +10,9 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import university.jala.gumaapi.dtos.request.ChatDTO;
 import university.jala.gumaapi.dtos.response.ChatDTOResponse;
+import university.jala.gumaapi.dtos.response.canvas.Assignment;
 import university.jala.gumaapi.entity.LessonReviews;
-import university.jala.gumaapi.service.ChatReviewService;
-import university.jala.gumaapi.service.FileProcessingService;
-import university.jala.gumaapi.service.LessonReviewsService;
-import university.jala.gumaapi.service.ReviewObserver;
+import university.jala.gumaapi.service.*;
 
 import java.util.List;
 import java.util.Map;
@@ -26,31 +24,46 @@ public class ChatReviewServiceImpl implements ChatReviewService {
     private final FileProcessingService fileProcessingService;
     private final LessonReviewsService service;
     private final List<ReviewObserver> observers;
+    private final CanvasService canvasService;
 
 
     @Value("${spring.ai.ollama.chat.model}")
     private String ollamaModel;
 
-    public ChatReviewServiceImpl(ChatClient chatClient, FileProcessingService fileProcessingService, LessonReviewsServiceImpl service, List<ReviewObserver> observers) {
+    public ChatReviewServiceImpl(
+            ChatClient chatClient,
+            FileProcessingService fileProcessingService,
+            LessonReviewsServiceImpl service,
+            List<ReviewObserver> observers,
+            CanvasService canvasService
+    ) {
         this.chatClient = chatClient;
         this.fileProcessingService = fileProcessingService;
         this.service = service;
         this.observers = observers;
+        this.canvasService = canvasService;
     }
 
     @Override
-    public Flux<ChatDTOResponse> verifyAssignment(ChatDTO body, MultipartFile file) {
-        String processedFile = this.fileProcessingService.processFile(file);
+    public Flux<ChatDTOResponse> verifyAssignment(
+            ChatDTO body,
+            int courseId,
+            int assignmentId,
+            String token
+    ) {
 
         StringBuilder finalResponseBuilder = new StringBuilder();
 
-        return this.getPrompt(body, processedFile)
+        Assignment assignmentFound = this.canvasService.getAssignmentById(courseId, assignmentId, token);
+        body.setHeading(assignmentFound.getRubric());
+        log.info("[CHATREVIEW-SERVICE] Rubric {} of assignment {}", body.getHeading(), assignmentId);
+
+        return this.getPrompt(body)
                 .map(data -> {
                     finalResponseBuilder.append(data);
                     return ChatDTOResponse.builder()
                             .content(data)
                             .model(ollamaModel)
-                            .heading(body.getHeading())
                             .subject(body.getSubject())
                             .professor(body.getProfessor())
                             .build();
@@ -76,14 +89,15 @@ public class ChatReviewServiceImpl implements ChatReviewService {
         return Mono.just(this.service.findByLessonReviewId(lessonId));
     }
 
-    private Flux<String> getPrompt(ChatDTO body, String processedFile) {
+    private Flux<String> getPrompt(ChatDTO body) {
+        log.info("Generating prompt to {}", body.getSubject());
         return this.chatClient.prompt()
                 .system(sp -> sp.params(Map.of(
                         "teacher", body.getProfessor(),
                         "class", body.getSubject(),
                         "heading", body.getHeading()
                 )))
-                .user("Responda o que está faltando no seguinte documento: " + processedFile)
+                .user("Responda o que está faltando no seguinte documento: " + body.getContent())
                 .stream()
                 .content();
     }

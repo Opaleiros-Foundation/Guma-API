@@ -6,4 +6,4 @@
 | |_\ \| |_| || |  | |_| | | |
  \____(_)___(_)_|  |_(_)_| |_/
 
-Spring version papai ${spring-boot.formatted-version}
+Spring version papai ${spring-boot.formatted-version} and Guma version ${application.formatted-version}
