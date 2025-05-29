@@ -1,0 +1,41 @@
+name: Merge Validator
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+permissions: {}
+
+jobs:
+  conflicts:
+    permissions:
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+    if: ( github.event.pull_request.head.repo.full_name == 'Opaleiros-Foundation/Guma-API' || github.repository == 'Opaleiros-Foundation/Guma-API' )
+    steps:
+      - uses: atoomic/auto-label-merge-conflicts@custom
+        with:
+          CONFLICT_LABEL_NAME: "hasConflicts"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAX_RETRIES: 600 # 600 * 10 sec => 100 minutes
+          WAIT_MS: 10000 # 10 sec
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          java-package: 'jdk'
+          distribution: 'adopt'
+
+      - name: Build with Maven
+        run: mvn clean install -Dspring.flyway.enabled=false
+
+      - name: Run tests
+        run: mvn test -Dspring.flyway.enabled=false
