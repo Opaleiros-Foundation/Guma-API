@@ -10,6 +10,7 @@ import java.util.ArrayList;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class Rubric {
     public String id;
     public int points;
