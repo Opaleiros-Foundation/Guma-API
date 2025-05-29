@@ -4,7 +4,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -12,7 +11,10 @@ import university.jala.gumaapi.dtos.request.ChatDTO;
 import university.jala.gumaapi.dtos.response.ChatDTOResponse;
 import university.jala.gumaapi.dtos.response.canvas.Assignment;
 import university.jala.gumaapi.entity.LessonReviews;
-import university.jala.gumaapi.service.*;
+import university.jala.gumaapi.service.CanvasService;
+import university.jala.gumaapi.service.ChatReviewService;
+import university.jala.gumaapi.service.LessonReviewsService;
+import university.jala.gumaapi.service.ReviewObserver;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +23,6 @@ import java.util.Map;
 @Log4j2
 public class ChatReviewServiceImpl implements ChatReviewService {
     private final ChatClient chatClient;
-    private final FileProcessingService fileProcessingService;
     private final LessonReviewsService service;
     private final List<ReviewObserver> observers;
     private final CanvasService canvasService;
@@ -32,13 +33,11 @@ public class ChatReviewServiceImpl implements ChatReviewService {
 
     public ChatReviewServiceImpl(
             ChatClient chatClient,
-            FileProcessingService fileProcessingService,
             LessonReviewsServiceImpl service,
             List<ReviewObserver> observers,
             CanvasService canvasService
     ) {
         this.chatClient = chatClient;
-        this.fileProcessingService = fileProcessingService;
         this.service = service;
         this.observers = observers;
         this.canvasService = canvasService;

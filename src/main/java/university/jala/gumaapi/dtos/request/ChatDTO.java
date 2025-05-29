@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class ChatDTO {
     @NotBlank(message = "subject is mandatory")
     @Schema(description = "The school subject", example = "Database 2")
