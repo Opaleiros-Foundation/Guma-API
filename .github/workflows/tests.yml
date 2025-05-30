@@ -1,0 +1,25 @@
+name: Run tests on pull request
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          java-package: 'jdk'
+          distribution: 'adopt'
+
+      - name: Build with Maven
+        run: mvn clean install -Dspring.flyway.enabled=false
+
+      - name: Run tests
+        run: mvn test -Dspring.flyway.enabled=false
