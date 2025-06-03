@@ -1,0 +1,21 @@
+name: Merge Validator
+
+on:
+  pull_request:
+    types: [ opened, synchronize ]
+permissions: { }
+
+jobs:
+  conflicts:
+    permissions:
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: atoomic/auto-label-merge-conflicts@custom
+        with:
+          CONFLICT_LABEL_NAME: "hasConflicts"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAX_RETRIES: 600 # 600 * 10 sec => 100 minutes
+          WAIT_MS: 10000 # 10 sec
