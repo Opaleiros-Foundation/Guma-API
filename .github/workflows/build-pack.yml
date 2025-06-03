@@ -1,8 +1,10 @@
 name: Build Pack
 
 on:
-  push:
-    branches: [ "main" ]
+  ##push:
+    ##branches: [ "main" ]
+  pull_request:
+    types: [ opened, synchronize ]
   workflow_dispatch:
 
 permissions:
@@ -10,7 +12,7 @@ permissions:
   pages: write
 
 env:
-  INSTANCE: 'Writerside/hi'
+  INSTANCE: 'Writerside'
 
 jobs:
   build:
