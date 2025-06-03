@@ -51,6 +51,7 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/gumaapi:latest
 
   build_docs:
+    needs: docker_hub
     runs-on: ubuntu-latest
     outputs:
       algolia_artifact: ${{ steps.define-ids.outputs.algolia_artifact }}
@@ -100,7 +101,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
+    needs: build_docs
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
