@@ -11,7 +11,7 @@ jobs:
       pull-requests: write
 
     runs-on: ubuntu-latest
-    if: ( github.event.pull_request.head.repo.full_name == 'Opaleiros-Foundation/Guma-API' || github.repository == 'Opaleiros-Foundation/Guma-API' )
+    if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - uses: atoomic/auto-label-merge-conflicts@custom
         with:
