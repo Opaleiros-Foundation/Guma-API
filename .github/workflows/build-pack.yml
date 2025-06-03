@@ -3,7 +3,7 @@ name: Build Pack
 on:
   push:
     branches: [ "main" ]
-workflow_dispatch:
+  workflow_dispatch:
 
 permissions:
   id-token: write
