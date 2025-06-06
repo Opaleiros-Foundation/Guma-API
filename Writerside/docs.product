@@ -1,0 +1,6 @@
+<product name="docs" version="1.0">
+  <outputs>
+    <web-help name="WebHelp" output-dir="$output.dir$/docs"/>
+  </outputs>
+  <toc file="toc.xml"/>
+</product>
