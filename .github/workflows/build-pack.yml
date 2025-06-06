@@ -12,8 +12,7 @@ permissions:
   pages: write
 
 env:
-  INSTANCE: 'Writerside'
-  PRODUCT_NAME: 'docs'
+  INSTANCE: 'Writerside/g'
 
 jobs:
   build:
@@ -89,7 +88,6 @@ jobs:
         uses: JetBrains/writerside-github-action@v4
         with:
           instance: ${{ env.INSTANCE }}
-          product: ${{ env.PRODUCT_NAME }}
           docker-version: ${{ env.DOCKER_VERSION }}
           is-group: ${{ env.IS_GROUP }}
           artifact: ${{ steps.define-ids.outputs.artifact }}
