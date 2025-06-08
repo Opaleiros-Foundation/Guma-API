@@ -33,6 +33,7 @@ services:
       - SPRING.AI.OLLAMA.PASSWORD=api
       - OLLAMA_BASE_URL=http://ollama:11434
       - OLLAMA_MODEL=tinyllama
+      - APPLICATION_PREFIX=/api/v1/guma
     ports:
       - "8080:8080"
     depends_on:

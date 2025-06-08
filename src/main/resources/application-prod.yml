@@ -41,3 +41,6 @@ canvas:
   feign:
     name: canvas
     url: https://jalauniversity.instructure.com/api/v1
+server:
+  servlet:
+    context-path: ${APPLICATION_PREFIX}
