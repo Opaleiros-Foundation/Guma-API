@@ -25,7 +25,7 @@ jobs:
 
       - name: Run tests
         run: mvn test -Dspring.flyway.enabled=false
-  analyze_security:
+  analyze:
     needs: build
     name: Analyze (${{ matrix.language }})
     # Runner size impacts CodeQL analysis time. To learn more, please see:
@@ -33,7 +33,7 @@ jobs:
     #   - https://gh.io/supported-runners-and-hardware-resources
     #   - https://gh.io/using-larger-runners (GitHub.com only)
     # Consider using larger runners or machines with greater resources for possible analysis time improvements.
-    runs-on: ${{ matrix.language == 'java-kotlin' && 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
     permissions:
       # required for all workflows
       security-events: write
