@@ -1,3 +1,29 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+replay_pid*
+
+### Spring Boot ###
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
@@ -14,10 +40,13 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
 ### NetBeans ###
 /nbproject/private/
@@ -31,5 +60,64 @@ build/
 
 ### VS Code ###
 .vscode/
-.docker
-ollama
+
+### Mac ###
+.DS_Store
+
+### Windows ###
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+### Docker ###
+.docker/
+docker-compose.override.yml
+
+### Environment Variables ###
+.env
+.env.local
+.env.*.local
+
+### Database ###
+*.db
+*.sqlite
+*.sqlite3
+
+### Logs ###
+logs/
+*.log
+/log/
+
+### Temporary files ###
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+### Coverage reports ###
+/coverage/
+*.lcov
+
+### Node modules (if any frontend components) ###
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+### AI/ML Models ###
+ollama/
+models/
+*.model
+*.bin
+
+### Generated files ###
+generated/
+
+### Test artifacts ###
+/test-results/
+/allure-results/
+
+### Application specific ###
+application-local.yml
+application-local.properties
