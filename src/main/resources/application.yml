@@ -38,6 +38,9 @@ springdoc:
     path: /docs
   show-actuator: true
 
+server:
+  servlet:
+    context-path: ${APPLICATION_PREFIX}
 
 canvas:
   acess_token: ${ACCESS_TOKEN}

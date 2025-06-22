@@ -1,5 +1,6 @@
 package university.jala.gumaapi.dtos.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -26,5 +27,6 @@ public class ChatDTO {
     @Schema(description = "Assignment content", example = "make a database with java")
     private String content;
     @Schema(description = "The heading of the assignment", example = "Do A great database")
+    @JsonIgnore
     private List<Rubric> heading;
 }

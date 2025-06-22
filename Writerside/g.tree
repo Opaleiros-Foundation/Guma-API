@@ -4,7 +4,7 @@
 
 <instance-profile id="g"
                  name="Guma-docs"
-                 start-page="starter-topic.md">
+                 start-page="introduction.md">
 
-    <toc-element topic="starter-topic.md"/>
+    <toc-element topic="introduction.md"/>
 </instance-profile>
