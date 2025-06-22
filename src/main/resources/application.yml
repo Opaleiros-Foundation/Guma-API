@@ -21,7 +21,7 @@ spring:
           #top-p: 0.7
           #frequency-penalty: 1.2
           #presence-penalty: 1.1
-          #stop-sequences: [ "###", "END OF RESPONSE" ]
+        #stop-sequences: [ "###", "END OF RESPONSE" ]
         #keep-alive: 10m
 
   h2:
@@ -42,9 +42,11 @@ server:
   servlet:
     context-path: ${APPLICATION_PREFIX}
 
-
 canvas:
   acess_token: ${ACCESS_TOKEN}
   feign:
     name: canvas
     url: https://jalauniversity.instructure.com/api/v1
+
+cors:
+  allowedOrigins: ${CORS_ALLOWED_ORIGINS:*,http://localhost:5173}
