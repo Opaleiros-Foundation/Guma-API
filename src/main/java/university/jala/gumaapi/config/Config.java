@@ -6,11 +6,17 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 class Config {
+
+    @Value("${cors.allowedOrigins:*}")
+    private String allowedOrigins;
 
     @Bean
     ChatClient chatClient(ChatClient.Builder builder) {
@@ -31,6 +37,20 @@ class Config {
                         .termsOfService("https://github.com/Opaleiros-Foundation")
                         .license(new License().name("License of API")
                                 .url("https://opensource.org/license/mit/")));
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                String[] origins = allowedOrigins.split(",");
+                registry.addMapping("/**")
+                        .allowedOrigins(origins)
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*");
+            }
+        };
     }
 
 
