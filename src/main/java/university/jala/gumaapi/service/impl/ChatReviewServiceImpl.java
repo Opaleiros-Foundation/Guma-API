@@ -54,7 +54,7 @@ public class ChatReviewServiceImpl implements ChatReviewService {
         StringBuilder finalResponseBuilder = new StringBuilder();
 
         Assignment assignmentFound = this.canvasService.getAssignmentById(courseId, assignmentId, token);
-        body.setHeading(assignmentFound.getRubric());
+        if (assignmentFound.getRubric() != null) body.setHeading(assignmentFound.getRubric());
         log.info("[CHATREVIEW-SERVICE] Rubric {} of assignment {}", body.getHeading(), assignmentId);
 
         return this.getPrompt(body)
@@ -94,7 +94,8 @@ public class ChatReviewServiceImpl implements ChatReviewService {
                 .system(sp -> sp.params(Map.of(
                         "teacher", body.getProfessor(),
                         "class", body.getSubject(),
-                        "heading", body.getHeading()
+                        "heading", body.getHeading() != null ?
+                                body.getHeading().toString() : body.getSubject()
                 )))
                 .user("Responda o que está faltando no seguinte documento: " + body.getContent())
                 .stream()
